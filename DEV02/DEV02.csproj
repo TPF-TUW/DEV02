@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="_goClass, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\goClass\goClass\bin\Debug\_goClass.dll</HintPath>
+      <HintPath>\\172.16.0.190\MDS_Project\MDS\DLL\_goClass.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
