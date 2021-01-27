@@ -36,7 +36,8 @@ namespace DEV02
         // Set Form -----------------------------------------------------------------------------------------------------
         public void set_glBranch_Marking(GridLookUpEdit glName)
         {
-            db.getGl("Select OIDBranch,Name as Branch From Branchs", mainConn, glName, "OIDBranch", "Branch");
+            //db.getGl("Select OIDBranch,Name as Branch From Branchs", mainConn, glName, "OIDBranch", "Branch");
+            db.getGl("Select OIDBranch,Name as Branch From Branchs order by Name", mainConn, glName, "OIDBranch", "Branch");
         }
         public void set_slSampleRequestNo(SearchLookUpEdit slName)
         {
@@ -55,7 +56,8 @@ namespace DEV02
         // Tab : MarkingDetail ------------------------------
         public void getListofMaterialDetail(GridControl gc, string oidMark)
         {
-            string sql = "Select ROW_NUMBER() over(order by markdt.OIDSIZE) as No, (case smpl.PatternSizeZone when 0 then 'Japan' when 1 then 'Europe' when 2 then 'US' end) as PatternSizeZone,smpl.SMPLPatternNo,markdt.* From MarkingDetails markdt inner join Marking mark on mark.OIDMARK = markdt.OIDMARK inner join SMPLRequest smpl on smpl.OIDSMPL = mark.OIDSMPL Where mark.OIDMARK = " + oidMark + " ";
+            //string sql = "Select ROW_NUMBER() over(order by markdt.OIDSIZE) as No, (case smpl.PatternSizeZone when 0 then 'Japan' when 1 then 'Europe' when 2 then 'US' end) as PatternSizeZone,smpl.SMPLPatternNo,markdt.* From MarkingDetails markdt inner join Marking mark on mark.OIDMARK = markdt.OIDMARK inner join SMPLRequest smpl on smpl.OIDSMPL = mark.OIDSMPL Where mark.OIDMARK = " + oidMark + " ";
+            string sql = "Select ROW_NUMBER() over(order by markdt.OIDSIZE) as No,markdt.OIDMARKDT,markdt.OIDMARK,(case smpl.PatternSizeZone when 0 then 'Japan' when 1 then 'Europe' when 2 then 'US' end) as PatternSizeZone,smpl.SMPLPatternNo ,OIDITEM,s.OIDSIZE,s.SizeName as Size,OIDSMPLDTStuff,GPartsStuff,(case DetailsType when 0 then 'STD' when 1 then 'POS' when 2 then 'NEG' end) as Clothface,Details,TotalWidthSTD,UsableWidth,GM2,PracticalLengthCM,QuantityPCS,LengthPer1CM,LengthPer1M,LengthPer1INCH,LengthPer1YARD,WeightG,WeightKG From MarkingDetails markdt inner join Marking mark on mark.OIDMARK = markdt.OIDMARK inner join SMPLRequest smpl on smpl.OIDSMPL = mark.OIDSMPL inner join ProductSize s on s.OIDSIZE = markdt.OIDSIZE Where mark.OIDMARK = " + oidMark + " Order by DetailsType,Size desc";
             db.getDgv(sql, gc, mainConn);
         }
     }

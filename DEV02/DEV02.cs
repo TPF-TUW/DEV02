@@ -91,7 +91,11 @@ namespace DEV02
             //tabMarkDetail.SelectedTabPage = lcgStd;
 
             //Tab : Marking
-            hq.ListOfSample(gcListOfSample); gvListOfSample.Columns["No"].Fixed = DevExpress.XtraGrid.Columns.FixedStyle.Left; gvListOfSample.Columns["No"].Width = 30; gvListOfSample.Columns["No"].AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            hq.ListOfSample(gcListOfSample);
+            ct.text_center(gvListOfSample,"No",30);
+            //gvListOfSample.Columns["No"].Fixed = DevExpress.XtraGrid.Columns.FixedStyle.Left; 
+            //gvListOfSample.Columns["No"].Width = 30;
+            //gvListOfSample.Columns["No"].AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             hq.ListOfMarking(gcMARK);
             hq.set_glBranch_Marking(glBranch); glBranch.EditValue = 1;
             hq.set_slSampleRequestNo(slSampleRequestNo);
@@ -130,7 +134,7 @@ namespace DEV02
             txtUPDATE.Text = "0";
             txtUDATE.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            // -------------------------------------------------------------------------------------------------------------------------------------
+            // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
             //Tab : Marking Detail
 
@@ -653,7 +657,7 @@ namespace DEV02
                     //RefreshForm
                     refreshMarkingDetail();
                     // ดึง MaringDetail อีกที
-                    hq.getListofMaterialDetail(gcMDT, global_Marking);
+                    hq.getListofMaterialDetail(gcMDT, global_Marking); gvMDT.Columns["OIDSIZE"].Visible = false;
                 }
                 else
                 {
@@ -1001,7 +1005,7 @@ namespace DEV02
                 //string sql2 = "Select ROW_NUMBER() over(Order by OIDMARKDT) as No,OIDMARKDT as RecID,smpl.PatternSizeZone,smpl.SMPLPatternNo,fbpart.OIDSMFBGParts,FBType,s.SizeName as Size,TotalWidthSTD as StandardWidth,markdt.UsableWidth,WeightG,LengthPer1CM,QuantityPCS,PracticalLengthCM as BodyLength,LengthPer1M,LengthPer1INCH,LengthPer1YARD,WeightG From MarkingDetails markdt inner join Marking mark on mark.OIDMARK = markdt.OIDMARK inner join SMPLRequest smpl on smpl.OIDSMPL = mark.OIDSMPL inner join SMPLQuantityRequired q on q.OIDSMPL = smpl.OIDSMPL inner join SMPLRequestFabric fb on fb.OIDSMPLDT = q.OIDSMPLDT inner join SMPLRequestFabricParts fbpart on fbpart.OIDSMPLFB = fb.OIDSMPLFB inner join ProductSize s on s.OIDSIZE = markdt.OIDSIZE";
                 //string sql2 = "Select ROW_NUMBER() over(order by markdt.OIDSIZE) as No, (case smpl.PatternSizeZone when 0 then 'Japan' when 1 then 'Europe' when 2 then 'US' end) as PatternSizeZone,smpl.SMPLPatternNo,markdt.* From MarkingDetails markdt inner join Marking mark on mark.OIDMARK = markdt.OIDMARK inner join SMPLRequest smpl on smpl.OIDSMPL = mark.OIDSMPL Where mark.OIDMARK = " + global_Marking + " ";
                 //db.getDgv(sql2, gcMDT, mainConn);
-                hq.getListofMaterialDetail(gcMDT, global_Marking);
+                hq.getListofMaterialDetail(gcMDT, global_Marking); gvMDT.Columns["OIDSIZE"].Visible = false;
             }
         }
 
@@ -1029,7 +1033,8 @@ namespace DEV02
 
         public void refreshMarking()
         {
-            //
+            // Load SampleRequest > Stattus = New อีกครั้ง
+            hq.ListOfSample(gcListOfSample); ct.showInfoMessage("Refresh Marking is Success.");
         }
 
         public void refreshMarkingDetail()
@@ -1144,6 +1149,7 @@ namespace DEV02
         {
             //รับค่า OIDMark จากตาราง Marking และทำการ Set ค่า global_Marking
             global_Marking = ct.getCellVal(sender, "MarkingNo");
+            Console.WriteLine("globalMarking: "+global_Marking);
 
             //ไปที่ Tabindex 1
             gcListofFabric.Enabled = true;
@@ -1223,6 +1229,7 @@ namespace DEV02
                 bbiEdit.Visibility = DevExpress.XtraBars.BarItemVisibility.Always;
                 gcListofFabric.Enabled = false;
 
+                // Set Form
                 string oidMarkingDT = ct.getCellVal(sender, "OIDMARKDT");
                 txtPatternNo.EditValue = gvMDT.GetFocusedRowCellValue("SMPLPatternNo").ToString();
                 rdoPatternSizeZone.SelectedIndex = ct.get_ID_PatternSizeZone(gvMDT.GetFocusedRowCellValue("PatternSizeZone").ToString());
@@ -1264,21 +1271,21 @@ namespace DEV02
                 db.getDgv(sql3, gcNEG, mainConn);
 
                 //set chkBox FBGPart
-                // Clear FBPart
+                // Clear FBPart (หรือเป็นการดึงขึ้นมาใหม่)
                 db.getDgv("Select OIDGParts,GarmentParts as FBPart From GarmentParts", gcFBPart, mainConn);
 
-                // Split String to List
+                // Split String to List (แยก OID GPart ออกมาก) ตัวอย่าง 1,2,3
                 List<string> strList = ct.getCellVal(sender, "GPartsStuff").Split(',').ToList();
 
                 GridView gv = gvFBPart;
-                for (int i = 0; i < gv.RowCount; i++)
+                for (int i = 0; i < gv.RowCount; i++) // วนแถวทั้งหมดใน GPart
                 {
-                    //>> Read Data in Datatable :: วนรอบข้อมูลใน DataTable
+                    // วนเช็ค OIDGPart ที่อยู่ใน List ถ้าตรงกัน ก็ให้ Checked ซะ.
                     foreach (string val in strList)
                     {
                         string OIDGParts1 = gv.GetRowCellValue(i, "OIDGParts").ToString();
                         string OIDGParts2 = val.ToString();
-                        if (OIDGParts1 == OIDGParts2) //ถ้าตรงกัน ก็ให้ทำการ Check ซะ
+                        if (OIDGParts1 == OIDGParts2) // ถ้าตรงกัน ก็ให้ทำการ Check ซะ จบนะ
                         {
                             gv.SelectRow(i);
                         }

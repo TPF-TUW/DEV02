@@ -908,6 +908,7 @@
             this.gvListofFabric.OptionsBehavior.Editable = false;
             this.gvListofFabric.OptionsView.EnableAppearanceEvenRow = true;
             this.gvListofFabric.OptionsView.EnableAppearanceOddRow = true;
+            this.gvListofFabric.OptionsView.ShowGroupPanel = false;
             this.gvListofFabric.DoubleClick += new System.EventHandler(this.gvListofFabric_DoubleClick);
             // 
             // txtUDATE
@@ -1010,6 +1011,7 @@
             this.gvMARK.GridControl = this.gcMARK;
             this.gvMARK.Name = "gvMARK";
             this.gvMARK.OptionsBehavior.Editable = false;
+            this.gvMARK.OptionsView.ColumnAutoWidth = false;
             this.gvMARK.OptionsView.EnableAppearanceEvenRow = true;
             this.gvMARK.OptionsView.EnableAppearanceOddRow = true;
             this.gvMARK.OptionsView.ShowGroupPanel = false;
@@ -1281,6 +1283,7 @@
             this.gvListOfSample.OptionsBehavior.Editable = false;
             this.gvListOfSample.OptionsView.EnableAppearanceEvenRow = true;
             this.gvListOfSample.OptionsView.EnableAppearanceOddRow = true;
+            this.gvListOfSample.OptionsView.ShowGroupPanel = false;
             this.gvListOfSample.RowCellClick += new DevExpress.XtraGrid.Views.Grid.RowCellClickEventHandler(this.gvListOfSample_RowCellClick);
             // 
             // btnRemoveRow
@@ -1309,7 +1312,7 @@
             this.tabMARKING.Location = new System.Drawing.Point(0, 0);
             this.tabMARKING.Name = "tabMARKING";
             this.tabMARKING.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 2, 2);
-            this.tabMARKING.SelectedTabPage = this.lcgMarkDetail;
+            this.tabMARKING.SelectedTabPage = this.lcgMark;
             this.tabMARKING.Size = new System.Drawing.Size(1450, 700);
             this.tabMARKING.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.lcgMark,
@@ -1409,6 +1412,8 @@
             // 
             // layoutControlItem5
             // 
+            this.layoutControlItem5.AppearanceItemCaption.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Warning;
+            this.layoutControlItem5.AppearanceItemCaption.Options.UseForeColor = true;
             this.layoutControlItem5.Control = this.glBranch;
             this.layoutControlItem5.Location = new System.Drawing.Point(0, 360);
             this.layoutControlItem5.Name = "layoutControlItem5";
@@ -1533,6 +1538,8 @@
             // 
             // layoutControlItem11
             // 
+            this.layoutControlItem11.AppearanceItemCaption.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Warning;
+            this.layoutControlItem11.AppearanceItemCaption.Options.UseForeColor = true;
             this.layoutControlItem11.Control = this.txtRequestBy;
             this.layoutControlItem11.Location = new System.Drawing.Point(0, 518);
             this.layoutControlItem11.Name = "layoutControlItem11";
